@@ -14,7 +14,15 @@
       },
       "oauth_client": [
         {
-          "client_id": "242257695385-t8k040vg5me8lf2cbjhrpuom9v91dgjt.apps.googleusercontent.com",
+          "client_id": "242257695385-0h55ed8tpqo8rtcbu7q2k47o70cg3qoa.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.projetmobile",
+            "certificate_hash": "06b0c072b267629e593d30c20743fd103612b727"
+          }
+        },
+        {
+          "client_id": "242257695385-hflvc8n2j7vq1g48vm0rva6s2j94ul69.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
@@ -27,7 +35,7 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "242257695385-t8k040vg5me8lf2cbjhrpuom9v91dgjt.apps.googleusercontent.com",
+              "client_id": "242257695385-hflvc8n2j7vq1g48vm0rva6s2j94ul69.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
