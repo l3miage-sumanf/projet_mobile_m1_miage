@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "242257695385",
+    "project_id": "likeflix-af693",
+    "storage_bucket": "likeflix-af693.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:242257695385:android:ba49593c64555340b81e08",
+        "android_client_info": {
+          "package_name": "com.projetmobile"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "242257695385-t8k040vg5me8lf2cbjhrpuom9v91dgjt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCGoMdfxDZKEzvkqbHFXF27V98GEZAOf0o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "242257695385-t8k040vg5me8lf2cbjhrpuom9v91dgjt.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
