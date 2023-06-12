@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {useEffect, useState} from 'react';
-import {Pressable, Text} from 'react-native';
+import {Pressable, StyleSheet, Text, View} from 'react-native';
 import {
   GoogleSignin,
   GoogleSigninButton,
@@ -58,16 +58,6 @@ const App = (): JSX.Element => {
 
   return userInfo !== null ? (
     <>
-      <Text>Name: {userInfo!.displayName}</Text>
-      <Text>Email: {userInfo.email}</Text>
-      <Pressable
-        onPress={() =>
-          googleSignOut().then(() => {
-            setuserInfo(null);
-          })
-        }>
-        <Text>Logout</Text>
-      </Pressable>
       <NavigationContainer theme={navigationTheme}>
         <Tab.Navigator
           screenOptions={({route}) => ({
@@ -112,26 +102,47 @@ const App = (): JSX.Element => {
           />
           <Tab.Screen
             name="Profile"
-            component={ProfileScreen}
             options={{headerShown: false}}
+            children={() => (
+              <ProfileScreen
+                displayName={userInfo?.displayName}
+                email={userInfo?.email}
+                photoURL={userInfo?.photoURL}
+                disconnect={() =>
+                  googleSignOut().then(() => {
+                    setuserInfo(null);
+                  })
+                }
+              />
+            )}
           />
         </Tab.Navigator>
       </NavigationContainer>
     </>
   ) : (
     <>
-      <GoogleSigninButton
-        style={{width: 312, height: 48}}
-        size={GoogleSigninButton.Size.Wide}
-        color={GoogleSigninButton.Color.Light}
-        onPress={() =>
-          googleSignIn()
-            .then(res => {
-              setuserInfo(res.user);
-            })
-            .catch(error => console.log(error))
-        }
-      />
+      <View
+        style={{
+          height: '100%',
+        }}>
+        <GoogleSigninButton
+          style={{
+            width: 312,
+            height: 48,
+            alignSelf: 'center',
+            marginTop: '60%',
+          }}
+          size={GoogleSigninButton.Size.Wide}
+          color={GoogleSigninButton.Color.Light}
+          onPress={() =>
+            googleSignIn()
+              .then(res => {
+                setuserInfo(res.user);
+              })
+              .catch(error => console.log(error))
+          }
+        />
+      </View>
     </>
   );
 };
