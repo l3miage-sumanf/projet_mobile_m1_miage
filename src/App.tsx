@@ -44,7 +44,7 @@ const App = (): JSX.Element => {
             backgroundColor: '#000',
             borderTopColor: '#000',
           },
-          sceneContainerStyle: {backgroundColor: '#000'}, // Déplacez cette ligne à l'intérieur de screenOptions
+          sceneContainerStyle: {backgroundColor: '#000'},
           headerStyle: {
             backgroundColor: '#000',
           },
