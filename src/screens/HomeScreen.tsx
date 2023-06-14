@@ -1,18 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, Image, TouchableOpacity, FlatList, StyleSheet, Modal, TextInput } from 'react-native';
 import DetailsMovie from '../components/DetailsMovie';
-
-interface Movie {
-    id: number;
-    original_title: string;
-    original_language: string;
-    vote_average: number;
-    backdrop_path: string;
-    overview: string;
-    release_date: string;
-    poster_path: string;
-    suggestions: {id: string, backdrop_path: string}[];
-}
+import { Movie } from '../types/types';
 
 const HomeScreen = () => {
     const [movies, setMovies] = useState<Movie[]>([]);
@@ -25,7 +14,6 @@ const HomeScreen = () => {
         overview: '',
         release_date: '',
         poster_path: '',
-        suggestions: [],
     });
     const [isDetailsOpen, setIsDetailsOpen] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
@@ -40,7 +28,7 @@ const HomeScreen = () => {
         let url: string = `https://api.themoviedb.org/3/trending/movie/week?api_key=${apiKey}`;
 
         if (searchQuery) {
-            url = `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${searchQuery}`;
+            url = url+`&query=${searchQuery}`;
             setShowHeading(false);
         } else {
             setShowHeading(true);

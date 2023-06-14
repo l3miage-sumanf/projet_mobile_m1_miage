@@ -10,17 +10,10 @@ import {
     Dimensions,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { Movie } from '../types/types';
 
 interface DetailsMovieProps {
-    movie: {
-        original_title: string;
-        original_language: string;
-        vote_average: number;
-        backdrop_path: string;
-        overview: string;
-        release_date: string;
-        suggestions: { id: string; backdrop_path: string }[];
-    };
+    movie: Movie;
     onClose: () => void;
     onAddToList: () => void;
 }
@@ -32,7 +25,7 @@ const DetailsMovie: React.FC<DetailsMovieProps> = ({
                                                        onClose,
                                                        onAddToList,
                                                    }: DetailsMovieProps) => {
-    const renderSuggestionItem = ({ item }: { item: { id: string; backdrop_path: string } }) => (
+    const renderSuggestionItem = ( item : Movie ) => (
         <TouchableOpacity style={stylesDetailsMovie.suggestionItem}>
             <Image
                 source={{ uri: `https://image.tmdb.org/t/p/original${item.backdrop_path}` }}
@@ -71,13 +64,6 @@ const DetailsMovie: React.FC<DetailsMovieProps> = ({
                     <Text style={stylesDetailsMovie.description}>{movie.overview}</Text>
                 </View>
                 <Text style={stylesDetailsMovie.suggestionsHeading}>Suggestions</Text>
-                <FlatList
-                    data={movie.suggestions}
-                    renderItem={renderSuggestionItem}
-                    keyExtractor={(item) => item.id}
-                    numColumns={2}
-                    contentContainerStyle={stylesDetailsMovie.suggestionsContainer}
-                />
             </View>
         </View>
     );
