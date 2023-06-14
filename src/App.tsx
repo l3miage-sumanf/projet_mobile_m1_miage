@@ -1,9 +1,9 @@
 import * as React from 'react';
 import {useEffect, useState} from 'react';
-import {StyleSheet, View} from 'react-native';
+import {Animated, Dimensions, StyleSheet, Text, View} from 'react-native';
 import {
-  GoogleSignin,
-  GoogleSigninButton,
+    GoogleSignin,
+    GoogleSigninButton,
 } from '@react-native-google-signin/google-signin';
 import auth, {FirebaseAuthTypes} from '@react-native-firebase/auth';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
@@ -12,143 +12,208 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import HomeScreen from './screens/HomeScreen';
 import LikedMoviesScreen from './screens/LikedMoviesScreen';
 import ProfileScreen from './screens/ProfileScreen';
+import LinearGradient from 'react-native-linear-gradient';
+import {Movie} from "./types/types";
+import database from "@react-native-firebase/database";
 
 const Tab = createBottomTabNavigator();
 
 const navigationTheme = {
-  ...DefaultTheme,
-  colors: {
-    ...DefaultTheme.colors,
-    background: '#000',
-  },
+    ...DefaultTheme,
+    colors: {
+        ...DefaultTheme.colors,
+        background: '#000',
+    },
 };
 
+const windowHeight = Dimensions.get('window').height;
+const windowWidth = Dimensions.get('window').width;
+
 const App = (): JSX.Element => {
-  const [userInfo, setuserInfo] = useState<FirebaseAuthTypes.User | null>(null);
-  useEffect(() => {
-    GoogleSignin.configure({
-      webClientId:
-        '242257695385-hflvc8n2j7vq1g48vm0rva6s2j94ul69.apps.googleusercontent.com',
-    });
-  }, []);
+    const scaleAnimation = useState(new Animated.Value(1))[0];
+    const [isAnimationStarted, setIsAnimationStarted] = useState(false);
 
-  const googleSignIn = async () => {
-    // Check if your device supports Google Play
-    await GoogleSignin.hasPlayServices({showPlayServicesUpdateDialog: true});
-    // Get the users ID token
-    const {idToken} = await GoogleSignin.signIn();
+    const [likedMovies, setLikedMovies] = useState<Movie[]>([]);
 
-    // Create a Google credential with the token
-    const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+    const [userInfo, setuserInfo] = useState<FirebaseAuthTypes.User | null>(null);
 
-    // Sign-in the user with the credential
-    return auth().signInWithCredential(googleCredential);
-  };
+    useEffect(() => {
+        GoogleSignin.configure({
+            webClientId:
+                '242257695385-hflvc8n2j7vq1g48vm0rva6s2j94ul69.apps.googleusercontent.com',
+        });
+        const user = auth().currentUser;
+        if (user) {
+            const userRef = database().ref(`users/${user.uid}`);
+            userRef.on('value', (snapshot) => {
+                const likedMovies = snapshot.val()?.likedMovies || [];
+                setLikedMovies(likedMovies);
+            });
+        }
 
-  const googleSignOut = async () => {
-    try {
-      await GoogleSignin.revokeAccess();
-      await auth().signOut();
-      // Google Account disconnected from your app.
-      // Perform clean-up actions, such as deleting data associated with the disconnected account.
-    } catch (error) {
-      console.error(error);
-    }
-  };
+        const animation = Animated.sequence([
+            Animated.timing(scaleAnimation, {
+                toValue: 1.4,
+                duration: 500,
+                useNativeDriver: true,
+            }),
+            Animated.timing(scaleAnimation, {
+                toValue: 1.2,
+                duration: 500,
+                useNativeDriver: true,
+            }),
+            Animated.timing(scaleAnimation, {
+                toValue: 1,
+                duration: 500,
+                useNativeDriver: true,
+            }),
+        ]);
 
-  return userInfo !== null ? (
-    <>
-      <NavigationContainer theme={navigationTheme}>
-        <Tab.Navigator
-          screenOptions={({route}) => ({
-            tabBarIcon: ({focused, size}) => {
-              let iconName;
+        const compositeAnimation = Animated.loop(animation, { iterations: 1 });
+        if (!isAnimationStarted) {
+            compositeAnimation.start(() => {
+                setIsAnimationStarted(true);
+            });
+        }
 
-              if (route.name === 'Home') {
-                iconName = focused ? 'ios-home' : 'ios-home-outline';
-              } else if (route.name === 'Profile') {
-                iconName = focused
-                  ? 'person-circle-sharp'
-                  : 'person-circle-outline';
-              } else if (route.name === 'Liked') {
-                iconName = focused ? 'heart' : 'heart-outline';
-              }
+        return () => {
+            compositeAnimation.stop();
+        };
+    }, [scaleAnimation, isAnimationStarted]);
 
-              return (
-                <Ionicons name={iconName ?? ''} size={size} color={'white'} />
-              );
-            },
-            tabBarActiveTintColor: 'white',
-            tabBarInactiveTintColor: 'gray',
-            tabBarStyle: {
-              backgroundColor: '#000',
-              borderTopColor: '#000',
-            },
-            sceneContainerStyle: {backgroundColor: '#000'},
-            headerStyle: {
-              backgroundColor: '#000',
-            },
-            headerTintColor: '#fff',
-          })}>
-          <Tab.Screen
-            name="Home"
-            component={HomeScreen}
-            options={{headerShown: false}}
-          />
-          <Tab.Screen
-            name="Liked"
-            component={LikedMoviesScreen}
-            options={{headerShown: false}}
-          />
-          <Tab.Screen
-            name="Profile"
-            options={{headerShown: false}}
-            children={() => (
-              <ProfileScreen
-                displayName={userInfo?.displayName}
-                email={userInfo?.email}
-                photoURL={userInfo?.photoURL}
-                disconnect={() =>
-                  googleSignOut().then(() => {
-                    setuserInfo(null);
-                  })
-                }
-              />
-            )}
-          />
-        </Tab.Navigator>
-      </NavigationContainer>
-    </>
-  ) : (
-    <>
-      <View style={stylesApp.container}>
-        <GoogleSigninButton
-          style={stylesApp.googleButton}
-          size={GoogleSigninButton.Size.Wide}
-          color={GoogleSigninButton.Color.Light}
-          onPress={() =>
-            googleSignIn()
-              .then(res => {
-                setuserInfo(res.user);
-              })
-              .catch(error => console.log(error))
-          }
-        />
-      </View>
-    </>
-  );
+
+    const googleSignIn = async () => {
+        await GoogleSignin.hasPlayServices({showPlayServicesUpdateDialog: true});
+        const {idToken} = await GoogleSignin.signIn();
+        const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+        return auth().signInWithCredential(googleCredential);
+    };
+
+    const googleSignOut = async () => {
+        try {
+            await GoogleSignin.revokeAccess();
+            await auth().signOut();
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    return userInfo !== null ? (
+        <>
+            <NavigationContainer theme={navigationTheme}>
+                <Tab.Navigator
+                    screenOptions={({route}) => ({
+                        tabBarIcon: ({focused, size}) => {
+                            let iconName;
+
+                            if (route.name === 'Home') {
+                                iconName = focused ? 'ios-home' : 'ios-home-outline';
+                            } else if (route.name === 'Profile') {
+                                iconName = focused
+                                    ? 'person-circle-sharp'
+                                    : 'person-circle-outline';
+                            } else if (route.name === 'Liked') {
+                                iconName = focused ? 'heart' : 'heart-outline';
+                            }
+
+                            return (
+                                <Ionicons name={iconName ?? ''} size={size} color={'white'} />
+                            );
+                        },
+                        tabBarActiveTintColor: 'white',
+                        tabBarInactiveTintColor: 'gray',
+                        tabBarStyle: {
+                            backgroundColor: '#000',
+                            borderTopColor: '#000',
+                        },
+                        sceneContainerStyle: {backgroundColor: '#000'},
+                        headerStyle: {
+                            backgroundColor: '#000',
+                        },
+                        headerTintColor: '#fff',
+                    })}>
+                    <Tab.Screen
+                        name="Home"
+                        component={HomeScreen}
+                        options={{headerShown: false}}
+                    />
+                    <Tab.Screen
+                        name="Liked"
+                        options={{ headerShown: false }}
+                        children={() => <LikedMoviesScreen />}
+                    />
+                    <Tab.Screen
+                        name="Profile"
+                        options={{headerShown: false}}
+                        children={() => (
+                            <ProfileScreen
+                                displayName={userInfo?.displayName}
+                                email={userInfo?.email}
+                                photoURL={userInfo?.photoURL}
+                                disconnect={() =>
+                                    googleSignOut().then(() => {
+                                        setuserInfo(null);
+                                    })
+                                }
+                            />
+                        )}
+                    />
+                </Tab.Navigator>
+            </NavigationContainer>
+        </>
+    ) : (
+        <>
+            <View style={stylesApp.container}>
+                <Animated.View style={[stylesApp.textContainer, { transform: [{ scale: scaleAnimation }] }]}>
+                    <Text style={stylesApp.logo}>Welcome to <Text style={{color: 'red'}}>LikeFlix</Text></Text>
+                    <Text style={stylesApp.slogan}>List your favorite movies in one click</Text>
+                </Animated.View>
+                <GoogleSigninButton
+                    style={stylesApp.googleButton}
+                    size={GoogleSigninButton.Size.Wide}
+                    color={GoogleSigninButton.Color.Light}
+                    onPress={() =>
+                        googleSignIn()
+                            .then(res => {
+                                setuserInfo(res.user);
+                            })
+                            .catch(error => console.log(error))
+                    }
+                />
+            </View>
+        </>
+    );
 };
 
 const stylesApp = StyleSheet.create({
-  container: {
-    height: '100%',
-  },
-  googleButton: {
-    width: 312,
-    height: 48,
-    alignSelf: 'center',
-    marginTop: '60%',
-  },
-});
+    container: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: 'black'
+    },
+    textContainer: {
+        alignItems: 'center',
+    },
+    logo: {
+        textAlign: 'center',
+        fontFamily: 'Roboto',
+        fontSize: 0.09 * Math.min(Dimensions.get('window').width, Dimensions.get('window').height),
+        fontWeight: '700',
+        color: '#f3f3f3',
+    },
+    slogan: {
+        textAlign: 'center',
+        fontFamily: 'Roboto',
+        fontSize: 0.04 * Math.min(Dimensions.get('window').width, Dimensions.get('window').height),
+        fontWeight: '700',
+        color: '#f3f3f3',
+    },
+    googleButton: {
+        width:'60%',
+        alignSelf: 'center',
+        marginTop: '60%',
 
+    }
+});
 export default App;

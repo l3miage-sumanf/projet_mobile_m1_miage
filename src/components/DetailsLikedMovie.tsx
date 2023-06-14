@@ -11,53 +11,53 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { Movie } from '../types/types';
 import {styles} from "../styles";
 
-interface DetailsMovieProps {
+interface DetailsLikedMovieProps {
     movie: Movie;
     onClose: () => void;
-    addMovieToLiked: (movie: Movie) => void
+    deleteMovieToLiked: (movie: Movie) => void
 }
 
 const windowHeight = Dimensions.get('window').height;
 const imageBaseUri = 'https://image.tmdb.org/t/p/original';
 
-const DetailsMovie: React.FC<DetailsMovieProps> = ({ movie, onClose, addMovieToLiked }: DetailsMovieProps) => {
+const DetailsLikedMovie: React.FC<DetailsLikedMovieProps> = ({ movie, onClose, deleteMovieToLiked }: DetailsLikedMovieProps) => {
 
     return (
-        <View style={stylesDetailsMovie.container}>
+        <View style={stylesDetailsLikedMovie.container}>
             <ImageBackground
                 source={{ uri: `${imageBaseUri}${movie.backdrop_path}` }}
-                style={[stylesDetailsMovie.imageBackground, { height: windowHeight * 0.4 }]}
+                style={[stylesDetailsLikedMovie.imageBackground, { height: windowHeight * 0.4 }]}
             >
-                <TouchableOpacity style={stylesDetailsMovie.closeButton} onPress={onClose}>
+                <TouchableOpacity style={stylesDetailsLikedMovie.closeButton} onPress={onClose}>
                     <Ionicons name="close-circle-outline" size={36} color="white" />
                 </TouchableOpacity>
             </ImageBackground>
-            <View style={stylesDetailsMovie.contentContainer}>
-                <TouchableOpacity style={stylesDetailsMovie.addButton} onPress={() => addMovieToLiked(movie)}>
-                    <Text style={stylesDetailsMovie.addButtonText}>Add to list</Text>
+            <View style={stylesDetailsLikedMovie.contentContainer}>
+                <TouchableOpacity style={stylesDetailsLikedMovie.addButton} onPress={() => deleteMovieToLiked(movie)}>
+                    <Text style={stylesDetailsLikedMovie.addButtonText}>Delete from list</Text>
                 </TouchableOpacity>
-                <View style={stylesDetailsMovie.detailsContainer}>
-                    <Text style={stylesDetailsMovie.detailsBeforeDescription}>
-                        <Text style={stylesDetailsMovie.recommended}>
+                <View style={stylesDetailsLikedMovie.detailsContainer}>
+                    <Text style={stylesDetailsLikedMovie.detailsBeforeDescription}>
+                        <Text style={stylesDetailsLikedMovie.recommended}>
                             Recommended {(movie.vote_average * 10).toFixed(0)}%
                         </Text>{'   •   '}
-                        <Text style={stylesDetailsMovie.originalLanguage}>
+                        <Text style={stylesDetailsLikedMovie.originalLanguage}>
                             {movie.release_date.split('-')[0]}
                         </Text>{'   •   '}
-                        <Text style={stylesDetailsMovie.originalLanguage}>
+                        <Text style={stylesDetailsLikedMovie.originalLanguage}>
                             {movie.original_language.toUpperCase()}
                         </Text>
                     </Text>
-                    <Text style={stylesDetailsMovie.title}>{movie.original_title}</Text>
+                    <Text style={stylesDetailsLikedMovie.title}>{movie.original_title}</Text>
                     <Text style={styles.text}>{movie.overview}</Text>
                 </View>
-                <Text style={stylesDetailsMovie.suggestionsHeading}>Suggestions</Text>
+                <Text style={stylesDetailsLikedMovie.suggestionsHeading}>Suggestions</Text>
             </View>
         </View>
     );
 };
 
-const stylesDetailsMovie = StyleSheet.create({
+const stylesDetailsLikedMovie = StyleSheet.create({
     container: {
         flex: 1,
         width: '100%',
@@ -123,4 +123,4 @@ const stylesDetailsMovie = StyleSheet.create({
     },
 });
 
-export default DetailsMovie;
+export default DetailsLikedMovie;

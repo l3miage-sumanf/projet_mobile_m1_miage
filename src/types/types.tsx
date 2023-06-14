@@ -8,3 +8,4 @@ export interface Movie {
     release_date: string;
     poster_path: string;
 }
+

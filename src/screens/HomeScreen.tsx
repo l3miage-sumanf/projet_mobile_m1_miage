@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, Image, TouchableOpacity, FlatList, StyleSheet, Modal, TextInput } from 'react-native';
 import DetailsMovie from '../components/DetailsMovie';
 import { Movie } from '../types/types';
+import database from '@react-native-firebase/database';
+import auth from '@react-native-firebase/auth';
+import {styles} from "../styles";
 
 const HomeScreen = () => {
     const [movies, setMovies] = useState<Movie[]>([]);
@@ -18,54 +21,80 @@ const HomeScreen = () => {
     const [isDetailsOpen, setIsDetailsOpen] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
     const [showHeading, setShowHeading] = useState(true);
+    const [showPopup, setShowPopup] = useState(false);
 
-    useEffect((): void => {
+    useEffect(() => {
         fetchMovies();
     }, [searchQuery]);
 
-    const fetchMovies = async (): Promise<void> => {
-        const apiKey : string = '08aa34e80ab8bf1c650d6d8874ea29f7';
+    const fetchMovies = async () => {
+        const apiKey: string = '08aa34e80ab8bf1c650d6d8874ea29f7';
         let url: string = `https://api.themoviedb.org/3/trending/movie/week?api_key=${apiKey}`;
 
         if (searchQuery) {
-            url = url+`&query=${searchQuery}`;
+            url = `${url}&query=${searchQuery}`;
             setShowHeading(false);
         } else {
             setShowHeading(true);
         }
 
-        const response: Response = await fetch(url);
-        const data = await response.json();
-        setMovies(data.results);
+        try {
+            const response = await fetch(url);
+            const data = await response.json();
+            setMovies(data.results);
+        } catch (error) {
+            console.error(error);
+        }
     };
 
     const renderMovieItem = ({ item }: { item: Movie }) => (
-        <TouchableOpacity style={stylesHome.movieItem} onPress={() => openMovieDetails(item)}>
-            <Image source={{ uri: `https://image.tmdb.org/t/p/w500${item.poster_path}` }} style={stylesHome.posterImage} />
+        <TouchableOpacity style={styles.movieItemCard} onPress={() => openMovieDetails(item)}>
+            <Image source={{ uri: `https://image.tmdb.org/t/p/w500${item.poster_path}` }} style={styles.posterImageCard} />
         </TouchableOpacity>
     );
 
-    const openMovieDetails = (movie: Movie): void => {
+    const openMovieDetails = (movie: Movie) => {
         setSelectedMovie(movie);
         setIsDetailsOpen(true);
     };
 
-    const closeMovieDetails = (): void => {
+    const closeMovieDetails = () => {
         setIsDetailsOpen(false);
     };
 
-    const handleSearch = (text: string): void => {
+    const handleSearch = (text: string) => {
         setSearchQuery(text);
         setShowHeading(false);
     };
 
-    const addToList = (): void => {
-        //TODO ADD TO LIST WHEN I LIKED MOVIE
-        console.log('Add dans la list');
-    }
+    const addMovieToLiked = (movie: Movie) => {
+        const user = auth().currentUser;
+        if (user) {
+            const userId = user.uid;
+            database()
+                .ref(`/likedMovies/${userId}/${movie.id}`)
+                .set(movie)
+                .then(() => {
+                    console.log('Movie added to liked list');
+                    setShowPopup(true);
+                    setTimeout(() => {
+                        setShowPopup(false);
+                    }, 2000);
+                })
+                .catch((error) => {
+                    console.error('Error adding movie to liked list:', error);
+                });
+        }
+        closeMovieDetails();
+    };
 
     return (
-        <View style={stylesHome.container}>
+        <View style={styles.containerCard}>
+            {showPopup && (
+                <View style={styles.popupContainer}>
+                    <Text style={styles.popupText}>Movie added to the list !</Text>
+                </View>
+            )}
             <TextInput
                 style={stylesHome.searchBar}
                 placeholder="Search for a movie..."
@@ -73,17 +102,22 @@ const HomeScreen = () => {
                 value={searchQuery}
                 onChangeText={handleSearch}
             />
-            {showHeading && <Text style={stylesHome.heading}>Trending movies</Text>}
-            <FlatList
-                data={movies}
-                renderItem={renderMovieItem}
-                keyExtractor={(item: Movie) => item.id.toString()}
-                numColumns={2}
-                decelerationRate="fast"
-            />
+            {showHeading && <Text style={styles.headingCard}>Trending movies</Text>}
+            {movies.length > 0 ? (
+                <FlatList
+                    data={movies}
+                    renderItem={renderMovieItem}
+                    keyExtractor={(item: Movie) => item.id.toString()}
+                    numColumns={2}
+                    decelerationRate="fast"
+                    initialNumToRender={10}
+                />
+            ) : (
+                <Text style={styles.emptyTextCard}>No movies yet.</Text>
+            )}
             <Modal visible={isDetailsOpen} animationType="slide">
-                <View style={stylesHome.modalContainer}>
-                    <DetailsMovie movie={selectedMovie} onClose={closeMovieDetails} onAddToList={addToList}/>
+                <View style={styles.baseContainer}>
+                    <DetailsMovie movie={selectedMovie} onClose={closeMovieDetails} addMovieToLiked={addMovieToLiked} />
                 </View>
             </Modal>
         </View>
@@ -91,16 +125,6 @@ const HomeScreen = () => {
 };
 
 const stylesHome = StyleSheet.create({
-    container:{
-        flex: 1,
-        padding: 16,
-    },
-    heading: {
-        fontSize: 24,
-        fontWeight: 'bold',
-        color: '#D81F26',
-        marginBottom: 10,
-    },
     searchBar: {
         height: 40,
         borderWidth: 2,
@@ -110,23 +134,12 @@ const stylesHome = StyleSheet.create({
         marginBottom: 10,
         color: 'white',
     },
-    movieItem: {
-        width: '50%',
-        marginBottom: 16,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    posterImage: {
-        width: '80%',
-        height: 200,
-        resizeMode: 'cover',
-        borderRadius: 5
-    },
-    modalContainer: {
-        flex: 1,
-        backgroundColor: 'rgba(0, 0, 0, 0.8)',
-        justifyContent: 'center',
-        alignItems: 'center',
+    likeButton: {
+        position: 'absolute',
+        top: 8,
+        right: 8,
+        backgroundColor: 'transparent',
+        padding: 8,
     },
 });
 

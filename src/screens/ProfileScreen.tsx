@@ -1,5 +1,6 @@
 import * as React from 'react';
 import {Button, Image, StyleSheet, Text, View} from 'react-native';
+import {styles} from "../styles";
 
 interface UserInfoProps {
   disconnect: () => void;
@@ -20,7 +21,7 @@ const ProfileScreen = (props: UserInfoProps): JSX.Element => {
       </View>
       <View style={stylesProfil.containerInfo}>
         <Text style={stylesProfil.textName}>{props.displayName}</Text>
-        <Text style={stylesProfil.text}>{props.email}</Text>
+        <Text style={styles.text}>{props.email}</Text>
         <Button title="Déconnexion" onPress={props.disconnect} />
       </View>
     </View>
@@ -42,9 +43,6 @@ const stylesProfil = StyleSheet.create({
     height: 120,
     borderRadius: 120 / 2,
     marginTop: '40%',
-  },
-  text: {
-    color: '#fff',
   },
   textName: {
     color: '#fff',
