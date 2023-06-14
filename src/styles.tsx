@@ -57,3 +57,69 @@ export const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
+
+export const stylesDetailsMovie = StyleSheet.create({
+  container: {
+    flex: 1,
+    width: '100%',
+  },
+  imageBackground: {
+    resizeMode: 'cover',
+    justifyContent: 'flex-end',
+  },
+  closeButton: {
+    position: 'absolute',
+    top: 16,
+    right: 16,
+  },
+  contentContainer: {
+    paddingHorizontal: 16,
+    paddingBottom: 16,
+    backgroundColor: 'black',
+    flex: 1,
+  },
+  addButton: {
+    alignSelf: 'center',
+    top: -20,
+    backgroundColor: '#e50914',
+    borderRadius: 4,
+    paddingVertical: 8,
+    paddingHorizontal: 26,
+    paddingRight: 50,
+    paddingLeft: 50,
+  },
+  addButtonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  recommended: {
+    color: '#30d158',
+    fontSize: 14,
+    fontWeight: 'bold',
+  },
+  originalLanguage: {
+    color: 'white',
+    fontSize: 14,
+    fontWeight: 'bold',
+  },
+  detailsContainer: {
+    marginBottom: 10,
+  },
+  detailsBeforeDescription: {
+    color: 'white',
+    marginBottom: 8,
+  },
+  title: {
+    color: 'white',
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 8,
+  },
+  suggestionsHeading: {
+    color: 'white',
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+});
