@@ -121,17 +121,9 @@ const App = (): JSX.Element => {
     </>
   ) : (
     <>
-      <View
-        style={{
-          height: '100%',
-        }}>
+      <View style={stylesApp.container}>
         <GoogleSigninButton
-          style={{
-            width: 312,
-            height: 48,
-            alignSelf: 'center',
-            marginTop: '60%',
-          }}
+          style={stylesApp.googleButton}
           size={GoogleSigninButton.Size.Wide}
           color={GoogleSigninButton.Color.Light}
           onPress={() =>
@@ -146,5 +138,17 @@ const App = (): JSX.Element => {
     </>
   );
 };
+
+const stylesApp = StyleSheet.create({
+  container: {
+    height: '100%',
+  },
+  googleButton: {
+    width: 312,
+    height: 48,
+    alignSelf: 'center',
+    marginTop: '60%',
+  },
+});
 
 export default App;
