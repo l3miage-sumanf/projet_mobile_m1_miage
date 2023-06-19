@@ -1,14 +1,7 @@
 import React from 'react';
-import {
-    Text,
-    View,
-    StyleSheet,
-    TouchableOpacity,
-    ImageBackground,
-    Dimensions,
-} from 'react-native';
+import {Dimensions, ImageBackground, Text, TouchableOpacity, View,} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { Movie } from '../types/types';
+import {Movie} from '../types/types';
 import {styles, stylesDetailsMovie} from "../styles";
 
 interface DetailsLikedMovieProps {
@@ -34,7 +27,7 @@ const DetailsLikedMovie: React.FC<DetailsLikedMovieProps> = ({ movie, onClose, d
             </ImageBackground>
             <View style={stylesDetailsMovie.contentContainer}>
                 <TouchableOpacity style={stylesDetailsMovie.addButton} onPress={() => deleteMovieToLiked(movie)}>
-                    <Text style={stylesDetailsMovie.addButtonText}>Delete from list</Text>
+                    <Text style={stylesDetailsMovie.addButtonText}>Unlike</Text>
                 </TouchableOpacity>
                 <View style={stylesDetailsMovie.detailsContainer}>
                     <Text style={stylesDetailsMovie.detailsBeforeDescription}>

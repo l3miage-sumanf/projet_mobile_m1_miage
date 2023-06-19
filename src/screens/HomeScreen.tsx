@@ -27,21 +27,26 @@ const HomeScreen = () => {
         fetchMovies();
     }, [searchQuery]);
 
-    const fetchMovies = async () => {
+    const fetchMovies =  () => {
         const apiKey: string = '08aa34e80ab8bf1c650d6d8874ea29f7';
-        let url: string = `https://api.themoviedb.org/3/trending/movie/week?api_key=${apiKey}`;
-
-        if (searchQuery) {
-            url = `${url}&query=${searchQuery}`;
+        const urlTrending: string = `https://api.themoviedb.org/3/trending/movie/day?api_key=${apiKey}`;
+        const urlSearch: string = `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}`;
+        let url : string = `${urlTrending}`;
+        if (searchQuery.trim() !== '') {
+            url = `${urlSearch}&query=${searchQuery}`;
             setShowHeading(false);
         } else {
             setShowHeading(true);
         }
 
         try {
-            const response = await fetch(url);
-            const data = await response.json();
-            setMovies(data.results);
+            fetch(url).then((data) => {
+                return data.json();
+            }).then((data) => {
+                if(JSON.stringify(data.results) !== JSON.stringify(movies)){
+                    setMovies(data.results);
+                }
+            });
         } catch (error) {
             console.error(error);
         }
@@ -49,7 +54,8 @@ const HomeScreen = () => {
 
     const renderMovieItem = ({ item }: { item: Movie }) => (
         <TouchableOpacity style={styles.movieItemCard} onPress={() => openMovieDetails(item)}>
-            <Image source={{ uri: `https://image.tmdb.org/t/p/w500${item.poster_path}` }} style={styles.posterImageCard} />
+            <Image source={{uri: `https://image.tmdb.org/t/p/w500${item.poster_path}`}}
+                   style={styles.posterImageCard}/>
         </TouchableOpacity>
     );
 
@@ -75,7 +81,6 @@ const HomeScreen = () => {
                 .ref(`/likedMovies/${userId}/${movie.id}`)
                 .set(movie)
                 .then(() => {
-                    console.log('Movie added to liked list');
                     setShowPopup(true);
                     setTimeout(() => {
                         setShowPopup(false);
@@ -103,7 +108,7 @@ const HomeScreen = () => {
                 onChangeText={handleSearch}
             />
             {showHeading && <Text style={styles.headingCard}>Trending movies</Text>}
-            {movies.length > 0 ? (
+            {movies?.length > 0 ? (
                 <FlatList
                     data={movies}
                     renderItem={renderMovieItem}

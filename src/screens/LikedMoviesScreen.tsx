@@ -43,11 +43,6 @@ const LikedMoviesScreen = () => {
                         const movies = snapshot.val();
                         if (movies) {
                             const movieList: Movie[] = Object.values(movies);
-                            console.log("----------------------");
-                            for(let i = 0; i < movieList.length; i++){
-                                console.log(movieList[i].original_title)
-                            }
-                            console.log("-----------------------");
                             setLikedMovies(movieList);
                         }
                     });
@@ -80,7 +75,6 @@ const LikedMoviesScreen = () => {
                 .ref(`/likedMovies/${userId}/${movie.id}`)
                 .remove()
                 .then(() => {
-                    console.log('Movie removed from liked list');
                     setShowPopup(true);
                     setTimeout(() => {
                         setShowPopup(false);
