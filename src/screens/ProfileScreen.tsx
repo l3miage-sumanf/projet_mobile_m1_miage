@@ -1,6 +1,5 @@
-import * as React from 'react';
-import {Button, Image, StyleSheet, Text, View} from 'react-native';
-import {styles} from "../styles";
+import React from 'react';
+import { View, Image, StyleSheet, Text, TouchableOpacity } from 'react-native';
 
 interface UserInfoProps {
   disconnect: () => void;
@@ -9,44 +8,68 @@ interface UserInfoProps {
   photoURL: string | null;
 }
 
-const ProfileScreen = (props: UserInfoProps): JSX.Element => {
-  const profilsrc = './src/assets/profil.png';
+const ProfileScreen = (props: UserInfoProps) => {
+  const profilsrc = require('../assets/profil.png');
+
   return (
-    <View style={stylesProfil.container}>
-      <View>
-        <Image
-          source={{uri: props.photoURL ? props.photoURL : profilsrc}}
-          style={stylesProfil.image}
-        />
+      <View style={styles.container}>
+        <View style={styles.imageContainer}>
+          <Image
+              source={props.photoURL ? { uri: props.photoURL } : profilsrc}
+              style={styles.image}
+          />
+        </View>
+        <View style={styles.infoContainer}>
+          <Text style={styles.displayName}>{props.displayName}</Text>
+          <Text style={styles.email}>{props.email}</Text>
+          <TouchableOpacity style={styles.button} onPress={props.disconnect}>
+            <Text style={styles.buttonText}>Logout</Text>
+          </TouchableOpacity>
+        </View>
       </View>
-      <View style={stylesProfil.containerInfo}>
-        <Text style={stylesProfil.textName}>{props.displayName}</Text>
-        <Text style={styles.text}>{props.email}</Text>
-        <Button title="Déconnexion" onPress={props.disconnect} />
-      </View>
-    </View>
   );
 };
 
-const stylesProfil = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#000',
     alignItems: 'center',
   },
-  containerInfo: {
-    marginTop: '4%',
+  imageContainer: {
+    marginTop: '40%',
     alignItems: 'center',
   },
   image: {
     width: 120,
     height: 120,
     borderRadius: 120 / 2,
-    marginTop: '40%',
   },
-  textName: {
+  infoContainer: {
+    marginTop: '20%',
+    alignItems: 'center',
+  },
+  displayName: {
     color: '#fff',
     fontSize: 20,
+    marginBottom: 10,
+  },
+  email: {
+    color: 'gray',
+    fontSize: 16,
+    fontStyle: 'italic',
+    marginBottom: 20,
+  },
+  button: {
+    backgroundColor: '#e50914',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 4,
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
 
