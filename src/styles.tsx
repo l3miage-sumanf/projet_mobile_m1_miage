@@ -11,7 +11,7 @@ export const styles = StyleSheet.create({
   headingCard: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#D81F26',
+    color: '#E0E0E0',
     marginBottom: 10,
   },
   movieItemCard: {

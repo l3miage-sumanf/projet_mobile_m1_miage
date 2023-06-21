@@ -1,17 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import {
-    View,
-    Text,
-    Image,
-    TouchableOpacity,
-    FlatList,
-    Modal,
-} from 'react-native';
-import { Movie } from '../types/types';
+import React, {useEffect, useState} from 'react';
+import {FlatList, Image, Modal, Text, TouchableOpacity, View,} from 'react-native';
+import {Movie} from '../types/types';
 import database from '@react-native-firebase/database';
 import auth from '@react-native-firebase/auth';
 import {styles} from "../styles";
-import DetailsLikedMovie from "../components/DetailsLikedMovie";
+import DetailsMovie from "../components/DetailsMovie";
 
 const LikedMoviesScreen = () => {
     const [likedMovies, setLikedMovies] = useState<Movie[]>([]);
@@ -109,7 +102,7 @@ const LikedMoviesScreen = () => {
             )}
             <Modal visible={isDetailsOpen} animationType="slide">
                 <View style={styles.baseContainer}>
-                    <DetailsLikedMovie movie={selectedMovie} onClose={closeMovieDetails} deleteMovieToLiked={deleteToLikedMovie} />
+                    <DetailsMovie movie={selectedMovie} onClose={closeMovieDetails} addOrDeleteMovieToLiked={deleteToLikedMovie} />
                 </View>
             </Modal>
         </View>

@@ -122,7 +122,7 @@ const HomeScreen = () => {
             )}
             <Modal visible={isDetailsOpen} animationType="slide">
                 <View style={styles.baseContainer}>
-                    <DetailsMovie movie={selectedMovie} onClose={closeMovieDetails} addMovieToLiked={addMovieToLiked} />
+                    <DetailsMovie movie={selectedMovie} onClose={closeMovieDetails} addOrDeleteMovieToLiked={addMovieToLiked} />
                 </View>
             </Modal>
         </View>
