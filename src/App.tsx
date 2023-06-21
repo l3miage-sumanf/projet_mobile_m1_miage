@@ -31,7 +31,6 @@ const windowWidth = Dimensions.get('window').width;
 
 const App = (): JSX.Element => {
     const scaleAnimation = useState(new Animated.Value(1))[0];
-    const [isAnimationStarted, setIsAnimationStarted] = useState(false);
 
     const [likedMovies, setLikedMovies] = useState<Movie[]>([]);
 
@@ -50,36 +49,7 @@ const App = (): JSX.Element => {
                 setLikedMovies(likedMovies);
             });
         }
-
-        const animation = Animated.sequence([
-            Animated.timing(scaleAnimation, {
-                toValue: 1.4,
-                duration: 500,
-                useNativeDriver: true,
-            }),
-            Animated.timing(scaleAnimation, {
-                toValue: 1.2,
-                duration: 500,
-                useNativeDriver: true,
-            }),
-            Animated.timing(scaleAnimation, {
-                toValue: 1,
-                duration: 500,
-                useNativeDriver: true,
-            }),
-        ]);
-
-        const compositeAnimation = Animated.loop(animation, { iterations: 1 });
-        if (!isAnimationStarted) {
-            compositeAnimation.start(() => {
-                setIsAnimationStarted(true);
-            });
-        }
-
-        return () => {
-            compositeAnimation.stop();
-        };
-    }, [scaleAnimation, isAnimationStarted]);
+    }, []);
 
 
     const googleSignIn = async () => {
