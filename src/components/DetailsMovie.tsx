@@ -7,13 +7,14 @@ import {styles, stylesDetailsMovie} from "../styles";
 interface DetailsMovieProps {
     movie: Movie;
     onClose: () => void;
-    addOrDeleteMovieToLiked: (movie: Movie) => void
+    addOrDeleteMovieToLiked: (movie: Movie) => void;
+    isLikedScreen: boolean;
 }
 
 const windowHeight = Dimensions.get('window').height;
 const imageBaseUri = 'https://image.tmdb.org/t/p/original';
 
-const DetailsMovie: React.FC<DetailsMovieProps> = ({ movie, onClose, addOrDeleteMovieToLiked }: DetailsMovieProps) => {
+const DetailsMovie: React.FC<DetailsMovieProps> = ({ movie, onClose, addOrDeleteMovieToLiked, isLikedScreen}: DetailsMovieProps) => {
     const [recommendedMovies, setRecommendedMovies] = useState<Movie[]>([]);
 
     const options = {
@@ -43,7 +44,7 @@ const DetailsMovie: React.FC<DetailsMovieProps> = ({ movie, onClose, addOrDelete
             </ImageBackground>
             <View style={stylesDetailsMovie.contentContainer}>
                 <TouchableOpacity style={stylesDetailsMovie.addButton} onPress={() => addOrDeleteMovieToLiked(movie)}>
-                    <Text style={stylesDetailsMovie.addButtonText}>Like</Text>
+                    <Text style={stylesDetailsMovie.addButtonText}>{isLikedScreen ? "Unlike" : "Like"}</Text>
                 </TouchableOpacity>
                 <View style={stylesDetailsMovie.detailsContainer}>
                     <Text style={stylesDetailsMovie.detailsBeforeDescription}>

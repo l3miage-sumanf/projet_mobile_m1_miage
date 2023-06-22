@@ -1,10 +1,7 @@
 import * as React from 'react';
 import {useEffect, useState} from 'react';
 import {Animated, Dimensions, StyleSheet, Text, View} from 'react-native';
-import {
-    GoogleSignin,
-    GoogleSigninButton,
-} from '@react-native-google-signin/google-signin';
+import {GoogleSignin, GoogleSigninButton,} from '@react-native-google-signin/google-signin';
 import auth, {FirebaseAuthTypes} from '@react-native-firebase/auth';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {DefaultTheme, NavigationContainer} from '@react-navigation/native';
@@ -12,7 +9,6 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import HomeScreen from './screens/HomeScreen';
 import LikedMoviesScreen from './screens/LikedMoviesScreen';
 import ProfileScreen from './screens/ProfileScreen';
-import LinearGradient from 'react-native-linear-gradient';
 import {Movie} from "./types/types";
 import database from "@react-native-firebase/database";
 
@@ -26,12 +22,7 @@ const navigationTheme = {
     },
 };
 
-const windowHeight = Dimensions.get('window').height;
-const windowWidth = Dimensions.get('window').width;
-
 const App = (): JSX.Element => {
-    const scaleAnimation = useState(new Animated.Value(1))[0];
-
     const [likedMovies, setLikedMovies] = useState<Movie[]>([]);
 
     const [userInfo, setuserInfo] = useState<FirebaseAuthTypes.User | null>(null);
@@ -87,7 +78,7 @@ const App = (): JSX.Element => {
                             }
 
                             return (
-                                <Ionicons name={iconName ?? ''} size={size} color={'white'} />
+                                <Ionicons name={iconName ?? ''} size={size} color={'white'}/>
                             );
                         },
                         tabBarActiveTintColor: 'white',
@@ -109,8 +100,8 @@ const App = (): JSX.Element => {
                     />
                     <Tab.Screen
                         name="Liked"
-                        options={{ headerShown: false }}
-                        children={() => <LikedMoviesScreen />}
+                        options={{headerShown: false}}
+                        children={() => <LikedMoviesScreen/>}
                     />
                     <Tab.Screen
                         name="Profile"
@@ -134,7 +125,7 @@ const App = (): JSX.Element => {
     ) : (
         <>
             <View style={stylesApp.container}>
-                <Animated.View style={[stylesApp.textContainer, { transform: [{ scale: scaleAnimation }] }]}>
+                <Animated.View style={stylesApp.textContainer}>
                     <Text style={stylesApp.logo}>Welcome to <Text style={{color: 'red'}}>LikeFlix</Text></Text>
                     <Text style={stylesApp.slogan}>List your favorite movies in one click</Text>
                 </Animated.View>
@@ -180,7 +171,7 @@ const stylesApp = StyleSheet.create({
         color: '#f3f3f3',
     },
     googleButton: {
-        width:'60%',
+        width: '60%',
         alignSelf: 'center',
         marginTop: '60%',
 

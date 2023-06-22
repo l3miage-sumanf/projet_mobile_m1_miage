@@ -45,9 +45,9 @@ const LikedMoviesScreen = () => {
         }
     };
 
-    const renderMovieItem = ({ item }: { item: Movie }) => (
+    const renderMovieItem = ({item}: { item: Movie }) => (
         <TouchableOpacity style={styles.movieItemCard} onPress={() => openMovieDetails(item)}>
-            <Image source={{ uri: `https://image.tmdb.org/t/p/w500${item.poster_path}` }} style={styles.posterImageCard} />
+            <Image source={{uri: `https://image.tmdb.org/t/p/w500${item.poster_path}`}} style={styles.posterImageCard}/>
         </TouchableOpacity>
     );
 
@@ -102,7 +102,8 @@ const LikedMoviesScreen = () => {
             )}
             <Modal visible={isDetailsOpen} animationType="slide">
                 <View style={styles.baseContainer}>
-                    <DetailsMovie movie={selectedMovie} onClose={closeMovieDetails} addOrDeleteMovieToLiked={deleteToLikedMovie} />
+                    <DetailsMovie movie={selectedMovie} onClose={closeMovieDetails}
+                                  addOrDeleteMovieToLiked={deleteToLikedMovie} isLikedScreen={true}/>
                 </View>
             </Modal>
         </View>

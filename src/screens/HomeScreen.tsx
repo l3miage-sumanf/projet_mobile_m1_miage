@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, Image, TouchableOpacity, FlatList, StyleSheet, Modal, TextInput } from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {FlatList, Image, Modal, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
 import DetailsMovie from '../components/DetailsMovie';
-import { Movie } from '../types/types';
+import {Movie} from '../types/types';
 import database from '@react-native-firebase/database';
 import auth from '@react-native-firebase/auth';
 import {styles} from "../styles";
@@ -27,11 +27,11 @@ const HomeScreen = () => {
         fetchMovies();
     }, [searchQuery]);
 
-    const fetchMovies =  () => {
+    const fetchMovies = () => {
         const apiKey: string = '08aa34e80ab8bf1c650d6d8874ea29f7';
         const urlTrending: string = `https://api.themoviedb.org/3/trending/movie/day?api_key=${apiKey}`;
         const urlSearch: string = `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}`;
-        let url : string = `${urlTrending}`;
+        let url: string = `${urlTrending}`;
         if (searchQuery.trim() !== '') {
             url = `${urlSearch}&query=${searchQuery}`;
             setShowHeading(false);
@@ -43,7 +43,7 @@ const HomeScreen = () => {
             fetch(url).then((data) => {
                 return data.json();
             }).then((data) => {
-                if(JSON.stringify(data.results) !== JSON.stringify(movies)){
+                if (JSON.stringify(data.results) !== JSON.stringify(movies)) {
                     setMovies(data.results);
                 }
             });
@@ -52,7 +52,7 @@ const HomeScreen = () => {
         }
     };
 
-    const renderMovieItem = ({ item }: { item: Movie }) => (
+    const renderMovieItem = ({item}: { item: Movie }) => (
         <TouchableOpacity style={styles.movieItemCard} onPress={() => openMovieDetails(item)}>
             <Image source={{uri: `https://image.tmdb.org/t/p/w500${item.poster_path}`}}
                    style={styles.posterImageCard}/>
@@ -122,7 +122,8 @@ const HomeScreen = () => {
             )}
             <Modal visible={isDetailsOpen} animationType="slide">
                 <View style={styles.baseContainer}>
-                    <DetailsMovie movie={selectedMovie} onClose={closeMovieDetails} addOrDeleteMovieToLiked={addMovieToLiked} />
+                    <DetailsMovie movie={selectedMovie} onClose={closeMovieDetails}
+                                  addOrDeleteMovieToLiked={addMovieToLiked} isLikedScreen={false}/>
                 </View>
             </Modal>
         </View>
