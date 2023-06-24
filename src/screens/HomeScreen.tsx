@@ -134,11 +134,9 @@ const stylesHome = StyleSheet.create({
     searchBar: {
         height: 40,
         borderWidth: 2,
-        borderColor: 'gray',
-        borderRadius: 8,
+        borderBottomColor: 'grey',
         paddingHorizontal: 16,
         marginBottom: 10,
-        color: 'white',
     },
     likeButton: {
         position: 'absolute',

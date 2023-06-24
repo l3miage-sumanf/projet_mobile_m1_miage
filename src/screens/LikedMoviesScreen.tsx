@@ -7,7 +7,7 @@ import {styles} from "../styles";
 import DetailsMovie from "../components/DetailsMovie";
 
 const LikedMoviesScreen = () => {
-    const [likedMovies, setLikedMovies] = useState<Movie[]>([]);
+    const [likedMovies, setLikedMovies] = useState<Movie[]|null>([]);
     const [selectedMovie, setSelectedMovie] = useState<Movie>({
         id: 0,
         original_title: '',
@@ -37,6 +37,8 @@ const LikedMoviesScreen = () => {
                         if (movies) {
                             const movieList: Movie[] = Object.values(movies);
                             setLikedMovies(movieList);
+                        }else{
+                            setLikedMovies(null);
                         }
                     });
             } catch (error) {
@@ -88,7 +90,7 @@ const LikedMoviesScreen = () => {
                 </View>
             )}
             <Text style={styles.headingCard}>My favorite movies</Text>
-            {likedMovies.length > 0 ? (
+            {likedMovies ? (
                 <FlatList
                     data={likedMovies}
                     renderItem={renderMovieItem}
