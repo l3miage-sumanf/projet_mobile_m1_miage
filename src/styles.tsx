@@ -1,4 +1,14 @@
 import {StyleSheet} from 'react-native';
+import {DefaultTheme} from "@react-navigation/native";
+
+
+export const navigationTheme = {
+  ...DefaultTheme,
+  colors: {
+    ...DefaultTheme.colors,
+    background: '#000',
+  },
+};
 
 export const styles = StyleSheet.create({
   baseContainer: {

@@ -137,6 +137,7 @@ const stylesHome = StyleSheet.create({
         borderBottomColor: 'grey',
         paddingHorizontal: 16,
         marginBottom: 10,
+        color: 'white'
     },
     likeButton: {
         position: 'absolute',

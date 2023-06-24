@@ -11,16 +11,9 @@ import LikedMoviesScreen from './screens/LikedMoviesScreen';
 import ProfileScreen from './screens/ProfileScreen';
 import {Movie} from "./types/types";
 import database from "@react-native-firebase/database";
+import {navigationTheme} from "./styles";
 
 const Tab = createBottomTabNavigator();
-
-const navigationTheme = {
-    ...DefaultTheme,
-    colors: {
-        ...DefaultTheme.colors,
-        background: '#000',
-    },
-};
 
 const App = (): JSX.Element => {
     const [likedMovies, setLikedMovies] = useState<Movie[]>([]);
@@ -151,10 +144,12 @@ const stylesApp = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: 'black'
+        backgroundColor: 'black',
     },
     textContainer: {
         alignItems: 'center',
+        position: 'absolute',
+        top: 250
     },
     logo: {
         textAlign: 'center',
@@ -173,8 +168,7 @@ const stylesApp = StyleSheet.create({
     googleButton: {
         width: '60%',
         alignSelf: 'center',
-        marginTop: '60%',
-
+        marginTop: 100
     }
 });
 export default App;

@@ -3,13 +3,7 @@ import {Dimensions, FlatList, Image, ImageBackground, Text, TouchableOpacity, Vi
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {Movie} from '../types/types';
 import {styles, stylesDetailsMovie} from "../styles";
-
-interface DetailsMovieProps {
-    movie: Movie;
-    onClose: () => void;
-    addOrDeleteMovieToLiked: (movie: Movie) => void;
-    isLikedScreen: boolean;
-}
+import {DetailsMovieProps} from '../types/types'
 
 const windowHeight = Dimensions.get('window').height;
 const imageBaseUri = 'https://image.tmdb.org/t/p/original';
@@ -62,19 +56,24 @@ const DetailsMovie: React.FC<DetailsMovieProps> = ({ movie, onClose, addOrDelete
                     <Text style={styles.text}>{movie.overview}</Text>
                 </View>
                 <Text style={stylesDetailsMovie.suggestionsHeading}>Suggestions</Text>
-                <FlatList
-                    data={recommendedMovies}
-                    renderItem={({item}) => {
-                        return (
-                            <TouchableOpacity style={styles.movieItemCard} onPress={() => console.log(item)}>
-                                <Image source={{uri: `${imageBaseUri}${item.poster_path}`}}
-                                       style={styles.posterImageCard}/>
-                            </TouchableOpacity>
-                        );
-                    }}
-                    horizontal
-                    showsHorizontalScrollIndicator={false}
+                {recommendedMovies.length > 0 ? (
+                    <FlatList
+                        data={recommendedMovies}
+                        renderItem={({item}) => {
+                            return (
+                                <TouchableOpacity style={styles.movieItemCard} onPress={() => console.log(item)}>
+                                    <Image source={{uri: `${imageBaseUri}${item.poster_path}`}}
+                                           style={styles.posterImageCard}/>
+                                </TouchableOpacity>
+                            );
+                        }}
+                        horizontal
+                        showsHorizontalScrollIndicator={false}
                     />
+                ) : (
+                    <Text style={styles.emptyTextCard}>No recommandations for this movie.</Text>
+                )}
+
             </View>
         </View>
     );

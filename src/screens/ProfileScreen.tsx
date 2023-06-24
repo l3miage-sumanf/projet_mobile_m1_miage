@@ -1,36 +1,29 @@
 import React from 'react';
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-
-interface UserInfoProps {
-    disconnect: () => void;
-    displayName: string | null;
-    email: string | null;
-    photoURL: string | null;
-}
+import {UserInfoProps} from '../types/types'
 
 const ProfileScreen = (props: UserInfoProps) => {
-    const profilsrc = require('../assets/profil.png');
 
     return (
-        <View style={styles.container}>
-            <View style={styles.imageContainer}>
+        <View style={stylesProfile.container}>
+            <View style={stylesProfile.imageContainer}>
                 <Image
-                    source={props.photoURL ? {uri: props.photoURL} : profilsrc}
-                    style={styles.image}
+                    source={props.photoURL ? {uri: props.photoURL} : require('../assets/profil.png')}
+                    style={stylesProfile.image}
                 />
             </View>
-            <View style={styles.infoContainer}>
-                <Text style={styles.displayName}>{props.displayName}</Text>
-                <Text style={styles.email}>{props.email}</Text>
-                <TouchableOpacity style={styles.button} onPress={props.disconnect}>
-                    <Text style={styles.buttonText}>Logout</Text>
+            <View style={stylesProfile.infoContainer}>
+                <Text style={stylesProfile.displayName}>{props.displayName}</Text>
+                <Text style={stylesProfile.email}>{props.email}</Text>
+                <TouchableOpacity style={stylesProfile.button} onPress={props.disconnect}>
+                    <Text style={stylesProfile.buttonText}>Logout</Text>
                 </TouchableOpacity>
             </View>
         </View>
     );
 };
 
-const styles = StyleSheet.create({
+const stylesProfile = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#000',
